@@ -61,9 +61,8 @@ listenLanguageChange = MyLocalize.instance.onLocaleChanged.stream.listen((code) 
 ```
 
 ## Demo
-![](resources/button-language.jpeg) 
 
-![](resources/page-language.jpeg) 
+![](resources/page-language.png) 
 
 # Help
 This project is a starting point for a Dart
