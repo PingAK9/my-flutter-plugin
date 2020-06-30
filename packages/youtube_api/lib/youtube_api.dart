@@ -3,15 +3,16 @@ library youtube_api;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:youtube_api/_api.dart';
-
 import 'model.dart';
 
+export 'model.dart';
+
 class YoutubeAPI {
-  static init(String key) {
+  static init(String key, String regionCode) {
     YoutubeAPI.key = key;
+    YoutubeAPI.regionCode = regionCode;
   }
 
   static String key;
@@ -27,13 +28,13 @@ abstract class BaseAPI {}
 
 /// Returns a list of videos that match the API request parameters.
 class VideosAPI {
-  String prevPageToken;
   String nextPageToken;
-  int page = 0;
+  int page = -1;
   int totalResults;
   int resultsPerPage;
   int maxResults;
   Map<String, String> options;
+  List<Video> videos;
 
   ///  List trending
   VideosAPI.mostPopular({this.maxResults = 10, String regionCode}) {
@@ -59,9 +60,10 @@ class VideosAPI {
   }
 
   ///  List by ID
-  VideosAPI.multipleVideoID(List<String> videoIDs, {this.maxResults = 10, String regionCode}) {
+  VideosAPI.multipleVideoID(List<String> videoIDs,
+      {this.maxResults = 10, String regionCode}) {
     String id = videoIDs[0];
-    for(int i = 1; i < videoIDs.length; i++){
+    for (int i = 1; i < videoIDs.length; i++) {
       // ignore: use_string_buffers
       id += ",${videoIDs[i]}";
     }
@@ -110,8 +112,15 @@ class VideosAPI {
     return result;
   }
 
-  Future<List> nextFirstPage() async {
-    return _load(options);
+  Future<List> loadFirstPage() async {
+    try {
+      videos = await _load(options);
+      page = 0;
+      return videos;
+    } catch (e) {
+      debugPrint(e);
+      return null;
+    }
   }
 
   /// To go on Next Page
@@ -119,21 +128,16 @@ class VideosAPI {
     if (nextPageToken == null) {
       return null;
     }
-    final Map<String, String> nextOptions = {"pageToken": nextPageToken}
-      ..addAll(options);
-    final result = await _load(nextOptions);
-    page--;
-    return result;
-  }
-
-  Future<List> prevPage() async {
-    if (prevPageToken == null) {
+    try {
+      final Map<String, String> nextOptions = {"pageToken": nextPageToken}
+        ..addAll(options);
+      final result = await _load(nextOptions);
+      page--;
+      videos.addAll(result);
+      return result;
+    } catch (e) {
+      debugPrint(e);
       return null;
     }
-    final Map<String, String> nextOptions = {"pageToken": prevPageToken}
-      ..addAll(options);
-    final result = await _load(nextOptions);
-    page++;
-    return result;
   }
 }
