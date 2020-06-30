@@ -109,9 +109,8 @@ class VideosAPI {
     for (int i = 0; i < total; i++) {
       result.add(Video(jsonData['items'][i]));
     }
-    debugPrint(url.toString());
-    debugPrint({"totalResults": totalResults, "resultsPerPage": resultsPerPage}
-        .toString());
+    print(url);
+    print({"totalResults": totalResults, "resultsPerPage": resultsPerPage});
     return result;
   }
 
@@ -121,7 +120,7 @@ class VideosAPI {
       page = 0;
       return videos;
     } catch (e) {
-      debugPrint(e);
+      print(e);
       return null;
     }
   }
@@ -139,7 +138,7 @@ class VideosAPI {
       videos.addAll(result);
       return result;
     } catch (e) {
-      debugPrint(e);
+      print(e);
       return null;
     }
   }
