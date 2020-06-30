@@ -14,47 +14,53 @@ class API {
 
   API({this.key, this.type, this.maxResults, this.query});
 
-  Uri searchUri(query, {String type}) {
+  Uri searchUri(String query, {String type}) {
     this.query = query;
     this.type = type ?? this.type;
     this.channelId = null;
-    var options = getOption();
-    Uri url = Uri.https(baseURL, "youtube/v3/search", options);
+    final options = getOption();
+    final Uri url = Uri.https(baseURL, "youtube/v3/search", options);
     return url;
   }
 
   Uri channelUri(String channelId, String order) {
     this.order = order ?? 'date';
     this.channelId = channelId;
-    var options = getChannelOption(channelId, this.order);
-    Uri url = Uri.https(baseURL, "youtube/v3/search", options);
+    final  options = getChannelOption(channelId, this.order);
+    final Uri url = Uri.https(baseURL, "youtube/v3/search", options);
     return url;
   }
 
   Uri videoUri(List<String> videoId) {
-    int length = videoId.length;
-    String videoIds = videoId.join(',');
-    var options = getVideoOption(videoIds, length);
-    Uri url = Uri.https(baseURL, "youtube/v3/videos", options);
+    final int length = videoId.length;
+    final String videoIds = videoId.join(',');
+    final  options = getVideoOption(videoIds, length);
+    final Uri url = Uri.https(baseURL, "youtube/v3/videos", options);
+    return url;
+  }
+
+  /// https://www.googleapis.com/youtube/v3/videos?part=contentDetails&chart=mostPopular&regionCode=IN&maxResults=25&key=AIzaSyCpONvrkea-rPQtyP97OdmbDsb0hyK8rw0
+  Uri listUri({String part, String chart}) {
+    final Uri url = Uri.https(baseURL, "youtube/v3/videos", options);
     return url;
   }
 
 //  For Getting Getting Next Page
   Uri nextPageUri() {
-    var options = this.channelId == null ? getOptions("pageToken", nextPageToken) : getChannelPageOption(channelId, "pageToken", nextPageToken);
-    Uri url = Uri.https(baseURL, "youtube/v3/search", options);
+    final options = this.channelId == null ? getOptions("pageToken", nextPageToken) : getChannelPageOption(channelId, "pageToken", nextPageToken);
+    final Uri url = Uri.https(baseURL, "youtube/v3/search", options);
     return url;
   }
 
 //  For Getting Getting Previous Page
   Uri prevPageUri() {
-    var options = this.channelId == null ? getOptions("pageToken", prevPageToken) : getChannelPageOption(channelId, "pageToken", prevPageToken);
-    Uri url = Uri.https(baseURL, "youtube/v3/search", options);
+    final options = this.channelId == null ? getOptions("pageToken", prevPageToken) : getChannelPageOption(channelId, "pageToken", prevPageToken);
+    final Uri url = Uri.https(baseURL, "youtube/v3/search", options);
     return url;
   }
 
   Object getOptions(String key, String value) {
-    Object options = {
+    final Object options = {
       key: value,
       "q": "${this.query}",
       "part": "snippet",
@@ -66,7 +72,7 @@ class API {
   }
 
   Object getOption() {
-    Object options = {
+    final Object options = {
       "q": "${this.query}",
       "part": "snippet",
       "maxResults": "${this.maxResults}",
@@ -77,7 +83,7 @@ class API {
   }
 
   Object getChannelOption(String channelId, String order) {
-    Object options = {
+    final Object options = {
       'channelId': channelId,
       "part": "snippet",
       'order': this.order,
@@ -88,7 +94,7 @@ class API {
   }
 
   Object getChannelPageOption(String channelId, String key, String value) {
-    Object options = {
+    final Object options = {
       key: value,
       'channelId': channelId,
       "part": "snippet",
@@ -99,7 +105,7 @@ class API {
   }
 
   Object getVideoOption(String videoIds, int length) {
-    Object options = {
+    final Object options = {
       "part": "contentDetails",
       "id": videoIds,
       "maxResults": "$length",
@@ -108,6 +114,6 @@ class API {
     return options;
   }
 
-  void setNextPageToken(String token) => this.nextPageToken = token;
-  void setPrevPageToken(String token) => this.nextPageToken = token;
+  String setNextPageToken(String token) => this.nextPageToken = token;
+  String setPrevPageToken(String token) => this.nextPageToken = token;
 }
