@@ -2,12 +2,14 @@ class Video {
   String duration;
   String id;
   Snippet snippet;
-
+  Statistics statistics;
+  
   Video(Map data) {
     id = data['id'];
     duration = data['contentDetails']['duration'];
     snippet = Snippet.fromJson(data["snippet"]);
     duration = _getDuration(data["contentDetails"]["duration"]);
+    statistics = Statistics.fromJson(data["statistics"]);
   }
 
   String _getDuration(String text) {
@@ -107,6 +109,38 @@ class Snippet {
         "defaultAudioLanguage": defaultAudioLanguage,
       };
 }
+class Statistics {
+  Statistics({
+    this.viewCount,
+    this.likeCount,
+    this.dislikeCount,
+    this.favoriteCount,
+    this.commentCount,
+  });
+
+  String viewCount;
+  String likeCount;
+  String dislikeCount;
+  String favoriteCount;
+  String commentCount;
+
+  factory Statistics.fromJson(Map<String, dynamic> json) => Statistics(
+    viewCount: json["viewCount"],
+    likeCount: json["likeCount"],
+    dislikeCount: json["dislikeCount"],
+    favoriteCount: json["favoriteCount"],
+    commentCount: json["commentCount"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "viewCount": viewCount,
+    "likeCount": likeCount,
+    "dislikeCount": dislikeCount,
+    "favoriteCount": favoriteCount,
+    "commentCount": commentCount,
+  };
+}
+
 
 class Thumbnails {
   Thumbnails({

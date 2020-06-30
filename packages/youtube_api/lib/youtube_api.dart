@@ -109,6 +109,9 @@ class VideosAPI {
     for (int i = 0; i < total; i++) {
       result.add(Video(jsonData['items'][i]));
     }
+    debugPrint(url.toString());
+    debugPrint({"totalResults": totalResults, "resultsPerPage": resultsPerPage}
+        .toString());
     return result;
   }
 
