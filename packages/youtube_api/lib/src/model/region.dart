@@ -1,5 +1,3 @@
-
-
 class Region {
   Region({
     this.id,
@@ -10,12 +8,12 @@ class Region {
   String name;
 
   factory Region.fromJson(Map<String, dynamic> json) => Region(
-    id: json["id"],
-    name: json["snippet"]["name"],
-  );
+        id: json["id"],
+        name: json["snippet"]["name"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "snippet": {"name": name},
-  };
+        "id": id,
+        "snippet": {"name": name},
+      };
 }

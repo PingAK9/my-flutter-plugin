@@ -6,12 +6,21 @@ class Video {
   SnippetVideo snippet;
   StatisticsVideo statistics;
 
-  Video.fromJson(Map data) {
-    if (data['id'] is String) {
-      id = data['id'];
+  factory Video.fromJson(Map data) {
+    final kind = data["kind"];
+    if (kind == "youtube#video") {
+      return Video.fromVideoJson(data);
+    } else if (kind == "youtube#searchResult") {
+      return Video.fromSearchJson(data);
+    } else if (kind == "youtube#playlistItem") {
+      return Video.fromPlaylistItemJson(data);
     } else {
-      id = data['id']["videoId"];
+      return Video.fromVideoJson(data);
     }
+  }
+
+  Video.fromVideoJson(Map data) {
+    id = data['id'];
     snippet = SnippetVideo.fromJson(data["snippet"]);
     if (data['contentDetails'] != null) {
       contentDetails = ContentDetailsVideo.fromJson(data['contentDetails']);
@@ -19,6 +28,16 @@ class Video {
     if (data['statistics'] != null) {
       statistics = StatisticsVideo.fromJson(data["statistics"]);
     }
+  }
+
+  Video.fromPlaylistItemJson(Map data) {
+    id = data['snippet']["resourceId"]["videoId"];
+    snippet = SnippetVideo.fromJson(data["snippet"]);
+  }
+
+  Video.fromSearchJson(Map data) {
+    id = data['id']["videoId"];
+    snippet = SnippetVideo.fromJson(data["snippet"]);
   }
 
   Map<String, dynamic> toJson() => {
@@ -96,7 +115,8 @@ class ContentDetailsVideo {
     return buff.join(":");
   }
 
-  factory ContentDetailsVideo.fromJson(Map<String, dynamic> json) => ContentDetailsVideo(
+  factory ContentDetailsVideo.fromJson(Map<String, dynamic> json) =>
+      ContentDetailsVideo(
         duration: json["duration"],
         dimension: json["dimension"],
         definition: json["definition"],

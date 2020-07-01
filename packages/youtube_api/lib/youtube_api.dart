@@ -3,6 +3,7 @@ library youtube_api;
 import 'package:flutter/material.dart';
 
 export 'src/model/category.dart';
+export 'src/model/playlist.dart';
 export 'src/model/channel.dart';
 export 'src/model/region.dart';
 export 'src/model/thumbnail.dart';
