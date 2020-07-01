@@ -1,5 +1,8 @@
 import 'package:youtube_api/youtube_api.dart';
 
+/// A video resource represents a YouTube video.
+/// "kind": "youtube#video"
+/// https://developers.google.com/youtube/v3/docs/videos
 class Video {
   ContentDetailsVideo contentDetails;
   String id;

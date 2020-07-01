@@ -6,7 +6,7 @@ import '../youtube_api.dart';
 import 'model/video.dart';
 
 /// Returns a list of videos that match the API request parameters.
-class VideoAPI {
+class VideoAPI extends BaseAPI<Video> {
   String nextPageToken;
   int page = -1;
   int totalResults;
@@ -14,8 +14,6 @@ class VideoAPI {
 
   /// max 50
   int maxResults;
-  Map<String, String> _options;
-  List<Video> results;
   String _unencodedPath;
   String videoCategoryId;
 
@@ -36,7 +34,7 @@ class VideoAPI {
       if (contentDetails) "contentDetails",
       if (statistics) "statistics",
     ];
-    _options = {
+    options = {
       "chart": "mostPopular",
       "regionCode": regionCode ?? YoutubeAPI.regionCode,
       "key": YoutubeAPI.key,
@@ -53,7 +51,6 @@ class VideoAPI {
   VideoAPI.videoID(
     String videoID, {
     this.maxResults = 50,
-    this.videoCategoryId,
     String regionCode,
     bool contentDetails = true,
     bool statistics = true,
@@ -63,14 +60,13 @@ class VideoAPI {
       if (contentDetails) "contentDetails",
       if (statistics) "statistics",
     ];
-    _options = {
+    options = {
       "chart": "mostPopular",
       "id": videoID,
       "regionCode": regionCode ?? YoutubeAPI.regionCode,
       "key": YoutubeAPI.key,
       "maxResults": "$maxResults",
       "part": listStringToString(part),
-      if (videoCategoryId != null) "videoCategoryId": videoCategoryId
     };
     _unencodedPath = "youtube/v3/videos";
   }
@@ -80,7 +76,6 @@ class VideoAPI {
   VideoAPI.multipleVideoID(
     List<String> videoIDs, {
     this.maxResults = 50,
-    this.videoCategoryId,
     String regionCode,
     bool contentDetails = true,
     bool statistics = true,
@@ -90,14 +85,13 @@ class VideoAPI {
       if (contentDetails) "contentDetails",
       if (statistics) "statistics",
     ];
-    _options = {
+    options = {
       "chart": "mostPopular",
       "id": listStringToString(videoIDs),
       "regionCode": regionCode ?? YoutubeAPI.regionCode,
       "key": YoutubeAPI.key,
       "maxResults": "$maxResults",
       "part": listStringToString(part),
-      if (videoCategoryId != null) "videoCategoryId": videoCategoryId
     };
     _unencodedPath = "youtube/v3/videos";
   }
@@ -110,7 +104,7 @@ class VideoAPI {
     this.videoCategoryId,
     String regionCode,
   }) {
-    _options = {
+    options = {
       "d": keyword,
       "type": "video",
       "regionCode": regionCode ?? YoutubeAPI.regionCode,
@@ -123,14 +117,14 @@ class VideoAPI {
   }
 
   /// https://www.googleapis.com/youtube/v3/search?relatedToVideoId=[id]&part=snippet
-  ///  Search by keyword
+  ///  Search by video ID
   VideoAPI.relatedToVideoId(
     String id, {
     this.maxResults = 50,
     this.videoCategoryId,
     String regionCode,
   }) {
-    _options = {
+    options = {
       "relatedToVideoId": id,
       "type": "video",
       "regionCode": regionCode ?? YoutubeAPI.regionCode,
@@ -142,19 +136,24 @@ class VideoAPI {
     _unencodedPath = "youtube/v3/search";
   }
 
+  ///  videos by playlistItems
+  ///  https://www.googleapis.com/youtube/v3/playlistItems?playlistId=PLOU2XLYxmsIL32BnYVuSqwgS0ClB_csKd
   VideoAPI.playlistItems(
     String playlistId, {
     this.maxResults = 50,
-    this.videoCategoryId,
+    bool contentDetails = true,
   }) {
-    _options = {
+    final List<String> part = [
+      "snippet",
+      if (contentDetails) "contentDetails",
+    ];
+    options = {
       "playlistId": playlistId,
       "key": YoutubeAPI.key,
       "maxResults": "$maxResults",
-      "part": "snippet",
-      if (videoCategoryId != null) "videoCategoryId": videoCategoryId
+      "part": listStringToString(part),
     };
-    _unencodedPath = "youtube/v3/search";
+    _unencodedPath = "youtube/v3/playlistItems";
   }
 
   /// optional
@@ -184,7 +183,7 @@ class VideoAPI {
 
   Future<List> loadFirstPage() async {
     try {
-      results = await _load(_options);
+      results = await _load(options);
       page = 0;
       return results;
     } catch (e) {
@@ -200,7 +199,7 @@ class VideoAPI {
     }
     try {
       final Map<String, String> nextOptions = {"pageToken": nextPageToken}
-        ..addAll(_options);
+        ..addAll(options);
       final result = await _load(nextOptions);
       page++;
       results.addAll(result);

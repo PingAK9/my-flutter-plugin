@@ -5,28 +5,32 @@ import 'package:http/http.dart' as http;
 import '../youtube_api.dart';
 
 /// Returns a list of videos that match the API request parameters.
-class RegionAPI {
-  Map<String, String> _options;
+class RegionAPI extends BaseAPI<Region> {
   String _unencodedPath;
-  List<Region> results;
 
   /// Cost 1
-  /// https://www.googleapis.com/youtube/v3/i18nRegions?part=snippet&key=[KEY]
+  /// https://www.googleapis.com/youtube/v3/i18nRegions?part=snippet&key=[YoutubeAPI.key]
   /// Returns a list of content regions that the YouTube website supports.
   RegionAPI.results() {
-    _options = {"part": "snippet", "key": YoutubeAPI.key};
+    options = {
+      "part": "snippet",
+      "key": YoutubeAPI.key,
+    };
     _unencodedPath = "youtube/v3/i18nRegions";
   }
 
   /// Cost 1
-  /// https://www.googleapis.com/youtube/v3/i18nLanguages?part=snippet&key=[KEY]
+  /// https://www.googleapis.com/youtube/v3/i18nLanguages?part=snippet&key=[YoutubeAPI.key]
   /// Returns a list of application languages that the YouTube website supports.
   RegionAPI.language() {
-    _options = {"part": "snippet", "key": YoutubeAPI.key};
+    options = {
+      "part": "snippet",
+      "key": YoutubeAPI.key,
+    };
     _unencodedPath = "youtube/v3/i18nLanguages";
   }
 
-  Future<List<Region>> _load(Map<String, String> options) async {
+  Future<List<Region>> _load() async {
     final Uri url = Uri.https(YoutubeAPI.baseURL, _unencodedPath, options);
 
     final res = await http.get(url, headers: {"Accept": "application/json"});
@@ -49,7 +53,7 @@ class RegionAPI {
       return results;
     }
     try {
-      return _load(_options);
+      return _load();
     } catch (e) {
       log(e);
       return null;

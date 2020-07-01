@@ -45,3 +45,8 @@ String listStringToString(List<String> list) {
   }
   return buffer.toString();
 }
+
+abstract class BaseAPI<T>{
+  Map<String, String> options;
+  List<T> results;
+}

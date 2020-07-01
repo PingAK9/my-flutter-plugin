@@ -7,21 +7,20 @@ import '../youtube_api.dart';
 import 'model/playlist.dart';
 
 /// Returns a list of videos that match the API request parameters.
-class PlaylistAPI {
+class PlaylistAPI extends BaseAPI<Playlist> {
   /// max 50
   int maxResults;
   int page = -1;
   String nextPageToken;
   int totalResults;
   int resultsPerPage;
-  Map<String, String> _options;
-  List<Playlist> results;
 
   /// cost snippet 3
   /// cost contentDetails 2
-  /// https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&channelId=[id]&key=[KEY]
+  /// https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&channelId=[channelId]&key=[YoutubeAPI.key]
   PlaylistAPI.byChannelID({
     String channelId,
+    String locale,
     this.maxResults = 50,
     bool contentDetails = false,
   }) {
@@ -29,15 +28,15 @@ class PlaylistAPI {
       "snippet",
       if (contentDetails) "contentDetails",
     ];
-    _options = {
+    options = {
+      "channelId": channelId,
       "part": listStringToString(part),
+      "hl": locale ?? YoutubeAPI.locale,
       "key": YoutubeAPI.key,
-      "channelId": channelId
     };
   }
 
-  /// optional
-  /// part=contentDetails,statistics,snippet
+  /// youtube/v3/playlists
   Future<List<Playlist>> _load(Map<String, String> _options) async {
     final Uri url =
         Uri.https(YoutubeAPI.baseURL, "youtube/v3/playlists", _options);
@@ -59,7 +58,7 @@ class PlaylistAPI {
 
   Future<List> loadFirstPage() async {
     try {
-      results = await _load(_options);
+      results = await _load(options);
       page = 0;
       return results;
     } catch (e) {
@@ -75,7 +74,7 @@ class PlaylistAPI {
     }
     try {
       final Map<String, String> nextOptions = {"pageToken": nextPageToken}
-        ..addAll(_options);
+        ..addAll(options);
       final result = await _load(nextOptions);
       page++;
       results.addAll(result);

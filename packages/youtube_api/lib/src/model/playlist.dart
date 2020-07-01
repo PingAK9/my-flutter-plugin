@@ -1,5 +1,8 @@
 import 'package:youtube_api/youtube_api.dart';
 
+/// A playlist resource represents a YouTube playlist
+/// "kind": "youtube#playlist"
+/// https://developers.google.com/youtube/v3/docs/playlists
 class Playlist {
   Playlist({
     this.id,

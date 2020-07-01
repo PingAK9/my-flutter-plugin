@@ -1,4 +1,7 @@
 
+/// A videoCategory resource identifies a category that has been or could be associated with uploaded videos.
+/// "kind": "youtube#videoCategory"
+/// https://developers.google.com/youtube/v3/docs/videoCategories
 class Category {
   Category({
     this.id,

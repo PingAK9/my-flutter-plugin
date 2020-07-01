@@ -1,3 +1,5 @@
+
+/// https://developers.google.com/youtube/v3/docs/thumbnails
 class Thumbnails {
   Thumbnails({
     this.thumbnail,
@@ -7,10 +9,20 @@ class Thumbnails {
     this.maxres,
   });
 
+  /// default: The default thumbnail image.
+  /// 120px wide and 90px tall
   Thumbnail thumbnail;
+  /// medium: A higher resolution version of the thumbnail image
+  /// 320px wide and 180px tall
   Thumbnail medium;
+  /// high: A high resolution version of the thumbnail image
+  /// 480px wide and 360px tall
   Thumbnail high;
+  /// standard: An even higher resolution version of the thumbnail image
+  /// 640px wide and 480px tall
   Thumbnail standard;
+  /// maxres: The highest resolution version of the thumbnail image
+  /// 1280px wide and 720px tall
   Thumbnail maxres;
 
   Thumbnails.fromJson(Map<String, dynamic> json) {

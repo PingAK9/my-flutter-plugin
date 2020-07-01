@@ -2,6 +2,9 @@
 
 import 'package:youtube_api/youtube_api.dart';
 
+/// A channel resource contains information about a YouTube channel.
+/// "kind": "youtube#channel"
+/// https://developers.google.com/youtube/v3/docs/channels
 class Channel {
   Channel({
     this.id,
