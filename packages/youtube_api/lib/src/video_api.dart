@@ -17,6 +17,7 @@ class VideoAPI {
   Map<String, String> _options;
   List<Video> results;
   String _unencodedPath;
+  String videoCategoryId;
 
   /// cost snippet 3
   /// cost contentDetails 2
@@ -25,6 +26,7 @@ class VideoAPI {
   /// Return List trending
   VideoAPI.mostPopular({
     this.maxResults = 50,
+    this.videoCategoryId,
     String regionCode,
     bool contentDetails = true,
     bool statistics = true,
@@ -40,6 +42,7 @@ class VideoAPI {
       "key": YoutubeAPI.key,
       "maxResults": "$maxResults",
       "part": listStringToString(part),
+      if (videoCategoryId != null) "videoCategoryId": videoCategoryId
     };
     _unencodedPath = "youtube/v3/videos";
   }
@@ -50,6 +53,7 @@ class VideoAPI {
   VideoAPI.videoID(
     String videoID, {
     this.maxResults = 50,
+    this.videoCategoryId,
     String regionCode,
     bool contentDetails = true,
     bool statistics = true,
@@ -66,6 +70,7 @@ class VideoAPI {
       "key": YoutubeAPI.key,
       "maxResults": "$maxResults",
       "part": listStringToString(part),
+      if (videoCategoryId != null) "videoCategoryId": videoCategoryId
     };
     _unencodedPath = "youtube/v3/videos";
   }
@@ -75,6 +80,7 @@ class VideoAPI {
   VideoAPI.multipleVideoID(
     List<String> videoIDs, {
     this.maxResults = 50,
+    this.videoCategoryId,
     String regionCode,
     bool contentDetails = true,
     bool statistics = true,
@@ -91,14 +97,19 @@ class VideoAPI {
       "key": YoutubeAPI.key,
       "maxResults": "$maxResults",
       "part": listStringToString(part),
+      if (videoCategoryId != null) "videoCategoryId": videoCategoryId
     };
     _unencodedPath = "youtube/v3/videos";
   }
 
   /// https://www.googleapis.com/youtube/v3/search?d=[keyword]&part=snippet
   ///  Search by keyword
-  VideoAPI.searchVideo(String keyword,
-      {this.maxResults = 50, String regionCode}) {
+  VideoAPI.searchVideo(
+    String keyword, {
+    this.maxResults = 50,
+    this.videoCategoryId,
+    String regionCode,
+  }) {
     _options = {
       "d": keyword,
       "type": "video",
@@ -106,6 +117,7 @@ class VideoAPI {
       "key": YoutubeAPI.key,
       "maxResults": "$maxResults",
       "part": "snippet",
+      if (videoCategoryId != null) "videoCategoryId": videoCategoryId
     };
     _unencodedPath = "youtube/v3/search";
   }
@@ -115,6 +127,7 @@ class VideoAPI {
   VideoAPI.relatedToVideoId(
     String id, {
     this.maxResults = 50,
+    this.videoCategoryId,
     String regionCode,
   }) {
     _options = {
@@ -124,6 +137,7 @@ class VideoAPI {
       "key": YoutubeAPI.key,
       "maxResults": "$maxResults",
       "part": "snippet",
+      if (videoCategoryId != null) "videoCategoryId": videoCategoryId
     };
     _unencodedPath = "youtube/v3/search";
   }
@@ -131,12 +145,14 @@ class VideoAPI {
   VideoAPI.playlistItems(
     String playlistId, {
     this.maxResults = 50,
+    this.videoCategoryId,
   }) {
     _options = {
       "playlistId": playlistId,
       "key": YoutubeAPI.key,
       "maxResults": "$maxResults",
       "part": "snippet",
+      if (videoCategoryId != null) "videoCategoryId": videoCategoryId
     };
     _unencodedPath = "youtube/v3/search";
   }
