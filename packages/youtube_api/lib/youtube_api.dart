@@ -1,7 +1,7 @@
 library youtube_api;
 
 import 'package:flutter/material.dart';
-
+import 'package:stack_trace/stack_trace.dart';
 export 'src/model/category.dart';
 export 'src/model/channel.dart';
 export 'src/model/playlist.dart';
@@ -31,8 +31,10 @@ class YoutubeAPI {
   static String locale;
 }
 
-void log(Object message) {
-  debugPrint('$message');
+void log(Object object, {int frames = 1}) {
+  final output = "${Trace.current().frames[frames].location} | $object";
+  final pattern = RegExp('.{1,1000}');
+  pattern.allMatches(output).forEach((match) => debugPrint(match.group(0)));
 }
 
 String listStringToString(List<String> list) {

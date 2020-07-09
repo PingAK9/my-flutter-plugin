@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import '../youtube_api.dart';
 import 'model/video.dart';
@@ -168,7 +169,7 @@ class VideoAPI extends BaseAPI<Video> {
       return [];
     }
     log(url);
-    log(res.body);
+    print(res.body);
     nextPageToken = jsonData['nextPageToken'];
     totalResults = jsonData['pageInfo']['totalResults'];
     resultsPerPage = jsonData['pageInfo']['resultsPerPage'];

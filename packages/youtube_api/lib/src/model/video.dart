@@ -198,29 +198,37 @@ class SnippetVideo {
 
   String get channelUrl => "https://www.youtube.com/channel/$channelId";
 
-  factory SnippetVideo.fromJson(Map<String, dynamic> json) => SnippetVideo(
-        publishedAt: DateTime.parse(json["publishedAt"]),
-        channelId: json["channelId"],
-        title: json["title"],
-        description: json["description"],
-        thumbnails: Thumbnails.fromJson(json["thumbnails"]),
-        channelTitle: json["channelTitle"],
-        tags: List<String>.from(json["tags"].map((x) => x)),
-        categoryId: json["categoryId"],
-        liveBroadcastContent: json["liveBroadcastContent"],
-        defaultAudioLanguage: json["defaultAudioLanguage"],
-      );
+  factory SnippetVideo.fromJson(Map<String, dynamic> json) {
+    List<String> _tags;
+    if (json["tags"] != null) {
+      _tags = List<String>.from(json["tags"].map((x) => x));
+    }
+    return SnippetVideo(
+      publishedAt: DateTime.parse(json["publishedAt"]),
+      channelId: json["channelId"],
+      title: json["title"],
+      description: json["description"],
+      thumbnails: Thumbnails.fromJson(json["thumbnails"]),
+      channelTitle: json["channelTitle"],
+      tags: _tags,
+      categoryId: json["categoryId"],
+      liveBroadcastContent: json["liveBroadcastContent"],
+      defaultAudioLanguage: json["defaultAudioLanguage"],
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-        "publishedAt": publishedAt.toIso8601String(),
-        "channelId": channelId,
-        "title": title,
-        "description": description,
-        "thumbnails": thumbnails.toJson(),
-        "channelTitle": channelTitle,
-        "tags": List<dynamic>.from(tags.map((x) => x)),
-        "categoryId": categoryId,
-        "liveBroadcastContent": liveBroadcastContent,
-        "defaultAudioLanguage": defaultAudioLanguage,
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      "publishedAt": publishedAt.toIso8601String(),
+      "channelId": channelId,
+      "title": title,
+      "description": description,
+      "thumbnails": thumbnails.toJson(),
+      "channelTitle": channelTitle,
+      "tags": tags != null ? List<dynamic>.from(tags.map((x) => x)) : null,
+      "categoryId": categoryId,
+      "liveBroadcastContent": liveBroadcastContent,
+      "defaultAudioLanguage": defaultAudioLanguage,
+    };
+  }
 }
