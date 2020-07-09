@@ -167,6 +167,8 @@ class VideoAPI extends BaseAPI<Video> {
     if (jsonData == null) {
       return [];
     }
+    log(url);
+    log(res.body);
     nextPageToken = jsonData['nextPageToken'];
     totalResults = jsonData['pageInfo']['totalResults'];
     resultsPerPage = jsonData['pageInfo']['resultsPerPage'];
@@ -176,7 +178,6 @@ class VideoAPI extends BaseAPI<Video> {
     for (int i = 0; i < total; i++) {
       result.add(Video.fromJson(jsonData['items'][i]));
     }
-    log(url);
     log({"totalResults": totalResults, "resultsPerPage": resultsPerPage});
     return result;
   }
